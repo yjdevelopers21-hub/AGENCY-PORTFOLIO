@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bhoot-purple: #7c3aed;
+  --color-bhoot-purple-hover: #6d28d9;
+  --color-bhoot-purple-light: #f3e8ff;
+  --color-bhoot-purple-subtle: #faf5ff;
+  --color-bhoot-gradient-start: #7c3aed;
+  --color-bhoot-gradient-end: #c084fc;
+  --color-bhoot-bg: #ffffff;
+  --color-bhoot-bg-alt: #faf9ff;
+  --color-bhoot-fg: #0f172a;
+  --color-bhoot-muted: #64748b;
+  --color-bhoot-border: #e2e8f0;
+  --color-bhoot-card: #ffffff;
+  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted-text: #64748b;
+  --primary-purple: #7c3aed;
+  --primary-purple-hover: #6d28d9;
+  --purple-light: #f3e8ff;
+  --purple-subtle: #faf5ff;
+  --border-color: #e2e8f0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Purple text gradient utility matching reference */
+.purple-gradient-text {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle card shadow matching reference */
+.bhoot-card-shadow {
+  box-shadow: 0 4px 20px -2px rgba(124, 58, 237, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.bhoot-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bhoot-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -10px rgba(124, 58, 237, 0.12), 0 8px 12px -4px rgba(0, 0, 0, 0.04);
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+/* Background grid overlay pattern */
+.bhoot-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(124, 58, 237, 0.07) 1px, transparent 0);
+}
+
+/* Glow effects */
+.bhoot-glow-purple {
+  background: radial-gradient(circle at center, rgba(124, 58, 237, 0.18) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 70%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
