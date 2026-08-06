@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { navItems } from '@/data/navigation';
 import { Logo } from './logo';
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ interface NavbarProps {
 export function Navbar({ onOpenModal }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('Home');
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,12 +59,15 @@ export function Navbar({ onOpenModal }: NavbarProps) {
             aria-label="Main Navigation"
           >
             {navItems.map((item) => {
-              const isActive = activeSection === item.label;
+              const isActive =
+                item.href === '/'
+                  ? pathname === '/'
+                  : pathname?.startsWith(item.href);
+
               return (
                 <Link
                   key={item.label}
                   href={item.href}
-                  onClick={() => setActiveSection(item.label)}
                   className={`relative text-xs lg:text-sm font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 ${
                     isActive
                       ? 'text-slate-900 font-semibold'
