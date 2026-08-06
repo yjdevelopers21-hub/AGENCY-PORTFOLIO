@@ -33,12 +33,12 @@ export function Hero({ onOpenModal }: HeroProps) {
   ];
 
   return (
-    <section id="main-content" className="relative pt-28 sm:pt-36 lg:pt-40 pb-16 sm:pb-24 lg:pb-28 overflow-hidden bg-white">
+    <section id="main-content" className="relative pt-24 sm:pt-36 lg:pt-40 pb-12 sm:pb-24 lg:pb-28 overflow-hidden bg-white">
       {/* Background Subtle Grid & Ambient Radial Pattern */}
       <div className="absolute inset-0 -z-10 bhoot-grid-pattern opacity-40 pointer-events-none" />
 
       <Container size="wide">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Headline & Hero Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -47,12 +47,12 @@ export function Hero({ onOpenModal }: HeroProps) {
             className="lg:col-span-7 flex flex-col items-start text-left"
           >
             {/* Eyebrow Label */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <Badge>INVISIBLE COMPLEXITY. VISIBLE IMPACT.</Badge>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12] mb-6">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] sm:leading-[1.12] mb-5 sm:mb-6">
               We Build Digital Experiences That Drive{' '}
               <span className="purple-gradient-text">Real Impact.</span>
             </h1>
@@ -63,17 +63,24 @@ export function Hero({ onOpenModal }: HeroProps) {
               web applications and eCommerce experiences for ambitious businesses.
             </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 mb-12 sm:mb-14">
-              <Button variant="dark" size="lg" showArrow onClick={onOpenModal}>
+            {/* Action Buttons: Full width on small mobile screens for optimal ergonomics */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto mb-10 sm:mb-14">
+              <Button
+                variant="dark"
+                size="lg"
+                showArrow
+                onClick={onOpenModal}
+                className="w-full sm:w-auto text-center justify-center py-3.5"
+              >
                 Start a Project
               </Button>
 
-              <Link href="#work">
+              <Link href="/work" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
                   icon={<Layout className="w-4 h-4 text-slate-600" />}
+                  className="w-full sm:w-auto text-center justify-center py-3.5"
                 >
                   Explore Our Work
                 </Button>
@@ -81,21 +88,21 @@ export function Hero({ onOpenModal }: HeroProps) {
             </div>
 
             {/* Honest Capability Highlights */}
-            <div className="w-full grid grid-cols-3 gap-3 sm:gap-4 max-w-xl border-t border-slate-100 pt-8">
+            <div className="w-full grid grid-cols-3 gap-2 sm:gap-4 max-w-xl border-t border-slate-100 pt-6 sm:pt-8">
               {capabilities.map((cap) => {
                 const IconComponent = cap.icon;
                 return (
                   <div
                     key={cap.title}
-                    className="flex flex-col items-start p-3 sm:p-4 rounded-xl bg-slate-50/60 border border-slate-100 bhoot-card-shadow hover:border-purple-200/60 transition-colors"
+                    className="flex flex-col items-center sm:items-start p-2.5 sm:p-4 rounded-xl bg-slate-50/60 border border-slate-100 bhoot-card-shadow hover:border-purple-200/60 transition-colors text-center sm:text-left"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-purple-100/70 text-purple-700 flex items-center justify-center mb-2.5">
-                      <IconComponent className="w-4 h-4" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-purple-100/70 text-purple-700 flex items-center justify-center mb-2">
+                      <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
-                    <span className="text-sm font-bold text-slate-900">
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
                       {cap.title}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium hidden sm:inline-block">
+                    <span className="text-[11px] text-slate-500 font-medium hidden sm:inline-block mt-0.5">
                       {cap.subtitle}
                     </span>
                   </div>

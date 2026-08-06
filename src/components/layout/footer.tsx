@@ -14,13 +14,13 @@ import { Mail, Phone } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-slate-200/80 pt-16 pb-12 text-slate-600">
+    <footer className="bg-white border-t border-slate-200/80 pt-12 sm:pt-16 pb-8 sm:pb-12 text-slate-600">
       <Container size="wide">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-14 border-b border-slate-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-8 pb-10 sm:pb-14 border-b border-slate-100">
           {/* Brand Info Column */}
-          <div className="lg:col-span-2 flex flex-col items-start pr-0 lg:pr-6">
+          <div className="sm:col-span-2 flex flex-col items-start pr-0 lg:pr-6">
             <Logo className="mb-4" />
-            <p className="text-sm font-semibold text-purple-700 tracking-wide mb-3">
+            <p className="text-sm font-semibold text-purple-700 tracking-wide mb-2 sm:mb-3">
               {companyData.tagline}
             </p>
             <p className="text-sm text-slate-500 leading-relaxed max-w-sm mb-6">
@@ -46,15 +46,15 @@ export function Footer() {
 
           {/* Column 1: Services */}
           <div>
-            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 sm:mb-4">
               Services
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2 sm:space-y-2.5">
               {footerServices.map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-600 hover:text-purple-600 transition-colors"
+                    className="text-xs sm:text-sm text-slate-600 hover:text-purple-600 transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -65,15 +65,15 @@ export function Footer() {
 
           {/* Column 2: Company */}
           <div>
-            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 sm:mb-4">
               Company
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2 sm:space-y-2.5">
               {footerCompany.map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-600 hover:text-purple-600 transition-colors"
+                    className="text-xs sm:text-sm text-slate-600 hover:text-purple-600 transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -84,23 +84,23 @@ export function Footer() {
 
           {/* Column 3: Let's Talk / Contact */}
           <div>
-            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 sm:mb-4">
               Let&apos;s Talk
             </h4>
             <p className="text-xs text-slate-500 mb-3">
               Have a project in mind? Let&apos;s create something amazing.
             </p>
-            <div className="space-y-2.5">
+            <div className="space-y-2 sm:space-y-2.5">
               <a
                 href={`mailto:${companyData.email}`}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors"
               >
                 <Mail className="w-4 h-4 text-purple-600 shrink-0" />
                 <span>{companyData.email}</span>
               </a>
               <a
                 href={`tel:${companyData.phone}`}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors block"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors block"
               >
                 <Phone className="w-4 h-4 text-purple-600 shrink-0" />
                 <span>{companyData.phone}</span>
@@ -110,9 +110,9 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Legal */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
           <p>© {companyData.copyrightYear} Bhoot Tech. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {footerQuickLinks.map((link) => (
               <Link
                 key={link.label}
