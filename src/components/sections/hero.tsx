@@ -9,7 +9,11 @@ import { Button } from '@/components/ui/button';
 import { HeroVisual } from './hero-visual';
 import { Layout, Smartphone, Zap, ShieldCheck } from 'lucide-react';
 
-export function Hero() {
+interface HeroProps {
+  onOpenModal?: () => void;
+}
+
+export function Hero({ onOpenModal }: HeroProps) {
   const capabilities = [
     {
       icon: Smartphone,
@@ -29,7 +33,7 @@ export function Hero() {
   ];
 
   return (
-    <section className="relative pt-28 sm:pt-36 lg:pt-40 pb-16 sm:pb-24 lg:pb-28 overflow-hidden bg-white">
+    <section id="main-content" className="relative pt-28 sm:pt-36 lg:pt-40 pb-16 sm:pb-24 lg:pb-28 overflow-hidden bg-white">
       {/* Background Subtle Grid & Ambient Radial Pattern */}
       <div className="absolute inset-0 -z-10 bhoot-grid-pattern opacity-40 pointer-events-none" />
 
@@ -61,11 +65,9 @@ export function Hero() {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-12 sm:mb-14">
-              <Link href="#contact">
-                <Button variant="dark" size="lg" showArrow>
-                  Start a Project
-                </Button>
-              </Link>
+              <Button variant="dark" size="lg" showArrow onClick={onOpenModal}>
+                Start a Project
+              </Button>
 
               <Link href="#work">
                 <Button
@@ -78,7 +80,7 @@ export function Hero() {
               </Link>
             </div>
 
-            {/* Honest Capability Highlights (replacing fake metrics) */}
+            {/* Honest Capability Highlights */}
             <div className="w-full grid grid-cols-3 gap-3 sm:gap-4 max-w-xl border-t border-slate-100 pt-8">
               {capabilities.map((cap) => {
                 const IconComponent = cap.icon;
@@ -102,7 +104,7 @@ export function Hero() {
             </div>
           </motion.div>
 
-          {/* Right Column: Hero Visual (Isometric Laptop & Glass Composition) */}
+          {/* Right Column: Hero Visual */}
           <div className="lg:col-span-5 w-full flex justify-center">
             <HeroVisual />
           </div>

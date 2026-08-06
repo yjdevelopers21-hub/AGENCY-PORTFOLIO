@@ -9,7 +9,11 @@ import { Container } from '@/components/ui/container';
 import { MobileMenu } from './mobile-menu';
 import { Menu } from 'lucide-react';
 
-export function Navbar() {
+interface NavbarProps {
+  onOpenModal?: () => void;
+}
+
+export function Navbar({ onOpenModal }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
@@ -35,6 +39,14 @@ export function Navbar() {
           : 'bg-transparent py-5 sm:py-6'
       }`}
     >
+      {/* Skip to Main Content Link for Keyboard Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold shadow-lg"
+      >
+        Skip to main content
+      </a>
+
       <Container size="wide">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -69,11 +81,15 @@ export function Navbar() {
 
           {/* Actions: CTA & Mobile Toggle */}
           <div className="flex items-center gap-3">
-            <Link href="#contact" className="hidden sm:inline-flex">
-              <Button variant="dark" size="sm" showArrow>
-                Start a Project
-              </Button>
-            </Link>
+            <Button
+              variant="dark"
+              size="sm"
+              showArrow
+              onClick={onOpenModal}
+              className="hidden sm:inline-flex"
+            >
+              Start a Project
+            </Button>
 
             {/* Mobile Hamburger Button */}
             <button
@@ -92,6 +108,7 @@ export function Navbar() {
       <MobileMenu
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
+        onOpenModal={onOpenModal}
       />
     </header>
   );

@@ -1,12 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 
-export function CTASection() {
+interface CTASectionProps {
+  onOpenModal?: () => void;
+}
+
+export function CTASection({ onOpenModal }: CTASectionProps) {
   return (
     <section id="contact" className="py-16 sm:py-24 bg-white">
       <Container size="wide">
@@ -32,11 +35,15 @@ export function CTASection() {
             </div>
 
             <div className="shrink-0">
-              <Link href="#contact">
-                <Button variant="dark" size="lg" showArrow className="px-8 py-4 text-base">
-                  Start Your Project
-                </Button>
-              </Link>
+              <Button
+                variant="dark"
+                size="lg"
+                showArrow
+                onClick={onOpenModal}
+                className="px-8 py-4 text-base"
+              >
+                Start Your Project
+              </Button>
             </div>
           </div>
         </motion.div>

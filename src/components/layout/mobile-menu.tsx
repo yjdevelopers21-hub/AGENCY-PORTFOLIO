@@ -11,9 +11,10 @@ import { X } from 'lucide-react';
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenModal?: () => void;
 }
 
-export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, onOpenModal }: MobileMenuProps) {
   // Prevent background body scroll when mobile menu is open
   useEffect(() => {
     if (isOpen) {
@@ -36,6 +37,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  const handleStartProject = () => {
+    onClose();
+    if (onOpenModal) {
+      onOpenModal();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -88,11 +96,14 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </nav>
 
             <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
-              <Link href="#contact" onClick={onClose} className="w-full">
-                <Button variant="dark" showArrow className="w-full py-3.5">
-                  Start a Project
-                </Button>
-              </Link>
+              <Button
+                variant="dark"
+                showArrow
+                onClick={handleStartProject}
+                className="w-full py-3.5"
+              >
+                Start a Project
+              </Button>
             </div>
           </motion.div>
         </>
