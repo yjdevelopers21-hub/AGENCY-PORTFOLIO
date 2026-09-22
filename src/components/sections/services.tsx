@@ -7,6 +7,7 @@ import { Container } from '@/components/ui/container';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Card } from '@/components/ui/card';
 import { servicesData } from '@/data/services';
+import { ServiceItem } from '@/types';
 import {
   Monitor,
   Code,
@@ -27,6 +28,19 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 export function Services() {
+  const [services, setServices] = React.useState<ServiceItem[]>(servicesData);
+
+  React.useEffect(() => {
+    fetch('/api/services')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          setServices(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section id="services" className="py-20 sm:py-28 bg-white">
       <Container size="wide">
@@ -34,12 +48,12 @@ export function Services() {
           eyebrow="WHAT WE DO"
           title="End-to-end Digital Solutions For Your Business"
           description="We combine strategy, design and technology to create digital products that look stunning and perform flawlessly."
-          actionHref="#contact"
+          actionHref="/services"
           actionText="View All Services"
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {servicesData.map((service, index) => {
+          {services.map((service, index) => {
             const IconComponent = iconMap[service.iconName] || Monitor;
             return (
               <motion.div

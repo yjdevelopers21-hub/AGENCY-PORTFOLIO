@@ -2,14 +2,29 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/container';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Card } from '@/components/ui/card';
 import { projectsData } from '@/data/projects';
+import { ProjectItem } from '@/types';
 import { ArrowRight } from 'lucide-react';
 
 export function SelectedWork() {
+  const [projects, setProjects] = React.useState<ProjectItem[]>(projectsData);
+
+  React.useEffect(() => {
+    fetch('/api/projects')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          setProjects(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section id="work" className="py-16 sm:py-28 bg-slate-50/50">
       <Container size="wide">
@@ -22,7 +37,7 @@ export function SelectedWork() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {projectsData.map((project, index) => (
+          {projects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
@@ -34,7 +49,16 @@ export function SelectedWork() {
                 <Card className="h-full flex flex-col justify-between overflow-hidden p-0 group border border-slate-200/80 bg-white cursor-pointer bhoot-card-hover">
                   {/* Project Banner Mockup */}
                   <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden">
-                    {/* Decorative Project Cover Mockup */}
+                    {project.image && project.image !== '/landing-page.png' && !['furniqa', 'solidestate', 'skilly'].includes(project.id) ? (
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={project.image}
+                          alt={project.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    ) : null}
                     {project.id === 'furniqa' && (
                       <div className="absolute inset-0 bg-gradient-to-br from-amber-100 via-orange-50 to-stone-200 flex items-center justify-center p-6 group-hover:scale-105 transition-transform duration-500">
                         <div className="w-full h-full bg-white/80 rounded-xl shadow-lg border border-amber-200/60 p-4 flex flex-col justify-between">

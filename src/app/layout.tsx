@@ -11,37 +11,38 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Bhoot Tech — Web Design & Development',
-    template: '%s | Bhoot Tech',
+    default: 'YJ DEVELOPERS — Web, Mobile App Development & Video Editing',
+    template: '%s | YJ DEVELOPERS',
   },
   description:
-    'Bhoot Tech designs and develops high-performance websites, eCommerce experiences and web applications for ambitious businesses.',
+    'YJ DEVELOPERS designs and develops high-performance websites, mobile applications, and video editing experiences for ambitious businesses.',
   keywords: [
     'Web Design',
     'Web Development',
-    'eCommerce',
-    'Web Applications',
-    'UI/UX Design',
+    'App Development',
+    'Mobile Apps',
+    'Video Editing',
+    'Post Production',
     'Next.js Studio',
-    'Frontend Engineering',
+    'Full Stack Agency',
   ],
-  authors: [{ name: 'Bhoot Tech' }],
-  creator: 'Bhoot Tech',
-  metadataBase: new URL('https://bhoottech.com'),
+  authors: [{ name: 'YJ DEVELOPERS' }],
+  creator: 'YJ DEVELOPERS',
+  metadataBase: new URL('https://yjdevelopers.com'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://bhoottech.com',
-    title: 'Bhoot Tech — Web Design & Development',
+    url: 'https://yjdevelopers.com',
+    title: 'YJ DEVELOPERS — Web, Mobile App Development & Video Editing',
     description:
       'Invisible Complexity. Visible Impact. We build fast, modern, scalable digital experiences for ambitious businesses.',
-    siteName: 'Bhoot Tech',
+    siteName: 'YJ DEVELOPERS',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bhoot Tech — Web Design & Development',
+    title: 'YJ DEVELOPERS — Web, Mobile App Development & Video Editing',
     description:
-      'Invisible Complexity. Visible Impact. Fast, modern, and scalable web solutions.',
+      'Invisible Complexity. Visible Impact. Fast, modern, and scalable digital solutions.',
   },
   robots: {
     index: true,

@@ -59,27 +59,23 @@ export function WhyUs() {
               {/* Radial Ambient Glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl -z-10" />
 
-              {/* 3D Ghost Mascot Illustration */}
+              {/* Brand Identity Emblem */}
               <div className="relative w-full aspect-square max-w-[240px] mx-auto flex items-center justify-center mb-6">
                 <motion.div
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                   className="relative flex items-center justify-center"
                 >
-                  <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-br from-purple-600 to-indigo-900 flex items-center justify-center shadow-2xl border-4 border-white/60 p-4">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-20 h-20 sm:w-24 sm:h-24 text-white drop-shadow-xl"
-                    >
-                      <path
-                        d="M12 3C7.58172 3 4 6.58172 4 11V18.5C4 19.3284 4.67157 20 5.5 20C6.01235 20 6.47648 19.742 6.75 19.3333L8.25 17.0833L9.75 19.3333C10.0235 19.742 10.4877 20 11 20H13C13.5123 20 13.9765 19.742 14.25 19.3333L15.75 17.0833L17.25 19.3333C17.5235 19.742 17.9877 20 18.5 20C19.3284 20 20 19.3284 20 18.5V11C20 6.58172 16.4183 3 12 3Z"
-                        fill="currentColor"
-                      />
-                      <circle cx="9.5" cy="10" r="1.25" fill="#7C3AED" />
-                      <circle cx="14.5" cy="10" r="1.25" fill="#7C3AED" />
-                    </svg>
+                  <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex flex-col items-center justify-center shadow-2xl border-4 border-white/80 p-5 relative overflow-hidden">
+                    {/* Glowing highlight */}
+                    <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-purple-500/20 to-transparent pointer-events-none" />
+                    
+                    <span className="text-3xl sm:text-4xl font-black text-white tracking-widest uppercase mb-1 drop-shadow-md">
+                      YJ
+                    </span>
+                    <span className="text-[10px] sm:text-xs font-extrabold text-purple-300 tracking-[0.25em] uppercase">
+                      DEVELOPERS
+                    </span>
                   </div>
                 </motion.div>
               </div>

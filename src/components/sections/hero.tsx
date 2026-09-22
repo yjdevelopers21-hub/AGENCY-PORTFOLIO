@@ -59,8 +59,8 @@ export function Hero({ onOpenModal }: HeroProps) {
 
             {/* Supporting Paragraph Copy */}
             <p className="text-base sm:text-lg lg:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mb-8 sm:mb-10">
-              Bhoot Tech designs and develops fast, modern and scalable websites,
-              web applications and eCommerce experiences for ambitious businesses.
+              YJ DEVELOPERS designs and develops fast, modern and scalable websites,
+              mobile applications and high-impact video editing for ambitious businesses.
             </p>
 
             {/* Action Buttons: Full width on small mobile screens for optimal ergonomics */}

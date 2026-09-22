@@ -16,25 +16,26 @@ export function Logo({ className }: LogoProps) {
         'inline-flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded-lg p-1 transition-opacity hover:opacity-90',
         className
       )}
-      aria-label="Bhoot Tech Home"
+      aria-label="YJ DEVELOPERS Home"
     >
       {/* Raw custom logo image */}
       <Image
         src="/black-logo.png"
-        alt="Bhoot Tech Logo"
+        alt="YJ DEVELOPERS Logo"
         width={36}
         height={36}
         className="h-8 sm:h-9 w-auto object-contain shrink-0"
+        style={{ width: 'auto', height: 'auto' }}
         priority
       />
 
       {/* Brand Text on Right Side */}
       <div className="flex items-center tracking-tight">
         <span className="font-extrabold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
-          Bhoot
+          YJ
         </span>
         <span className="font-light text-base sm:text-lg text-slate-600 uppercase tracking-wider ml-1.5">
-          Tech
+          DEVELOPERS
         </span>
       </div>
     </Link>

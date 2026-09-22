@@ -6,9 +6,23 @@ import { Container } from '@/components/ui/container';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { testimonialsData } from '@/data/testimonials';
+import { TestimonialItem } from '@/types';
 import { Quote } from 'lucide-react';
 
 export function Testimonials() {
+  const [testimonials, setTestimonials] = React.useState<TestimonialItem[]>(testimonialsData);
+
+  React.useEffect(() => {
+    fetch('/api/testimonials')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          setTestimonials(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="py-20 sm:py-28 bg-white">
       <Container size="wide">
@@ -24,7 +38,7 @@ export function Testimonials() {
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {testimonialsData.map((item, idx) => (
+          {testimonials.map((item, idx) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}

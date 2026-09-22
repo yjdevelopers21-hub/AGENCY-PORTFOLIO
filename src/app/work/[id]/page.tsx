@@ -123,7 +123,7 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                   The Engineering Solution
                 </h3>
                 <p className="text-base text-slate-600 leading-relaxed mb-6">
-                  Bhoot Tech architected a modern Next.js solution leveraging React Server Components, custom Tailwind UI design tokens, dynamic image optimization, and edge infrastructure.
+                  YJ DEVELOPERS architected a modern Next.js solution leveraging React Server Components, custom Tailwind UI design tokens, dynamic image optimization, and edge infrastructure.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

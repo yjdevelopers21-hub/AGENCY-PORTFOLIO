@@ -3,7 +3,7 @@ import { TestimonialItem } from '@/types';
 export const testimonialsData: TestimonialItem[] = [
   {
     id: '1',
-    quote: 'Bhoot Tech delivered a website that not only looks incredible but also performs exceptionally well. Highly recommended!',
+    quote: 'YJ DEVELOPERS delivered a website and mobile app that not only looks incredible but also performs exceptionally well. Highly recommended!',
     author: 'Rohit Sharma',
     role: 'Founder',
     company: 'Lumina',
@@ -17,7 +17,7 @@ export const testimonialsData: TestimonialItem[] = [
   },
   {
     id: '3',
-    quote: 'Our eCommerce sales improved significantly after the new website. Great experience working with Bhoot Tech.',
+    quote: 'Our brand engagement improved significantly after the new product videos and web launch. Great experience working with YJ DEVELOPERS.',
     author: 'Karan Arora',
     role: 'CEO',
     company: 'Furniqa',

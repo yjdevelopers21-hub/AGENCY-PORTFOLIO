@@ -38,22 +38,23 @@ export function HeroVisual() {
         >
           <Image
             src="/landing-page.png"
-            alt="Bhoot Tech Digital Experience Platform Showcase"
+            alt="YJ DEVELOPERS Digital Experience Platform Showcase"
             width={1200}
             height={800}
             className="w-full h-auto object-contain rounded-2xl"
+            style={{ width: 'auto', height: 'auto' }}
             priority
             unoptimized
           />
         </motion.div>
 
-        {/* Floating Circle Badge (Letter 'B') on Right Edge */}
+        {/* Floating Circle Badge (Initials 'YJ') on Right Edge */}
         <motion.div
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute right-0 sm:-right-2 top-1/4 z-20 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-xl border-2 border-purple-400/40"
+          className="absolute right-0 sm:-right-2 top-1/4 z-20 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-xl border-2 border-purple-400/40 tracking-wider"
         >
-          B
+          YJ
         </motion.div>
 
         {/* Handwritten Script Tag in Bottom Right Corner */}

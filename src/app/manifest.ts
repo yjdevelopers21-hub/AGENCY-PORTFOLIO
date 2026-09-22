@@ -2,10 +2,10 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Bhoot Tech — Invisible Complexity. Visible Impact.',
-    short_name: 'Bhoot Tech',
+    name: 'YJ DEVELOPERS — Invisible Complexity. Visible Impact.',
+    short_name: 'YJ DEVELOPERS',
     description:
-      'Fast, modern and scalable websites, web applications and eCommerce experiences for ambitious businesses.',
+      'Fast, modern and scalable websites, mobile apps and video editing for ambitious businesses.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

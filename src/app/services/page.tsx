@@ -11,6 +11,7 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { ProjectEstimator } from '@/components/ui/project-estimator';
 import { ProjectModal } from '@/components/ui/project-modal';
 import { servicesData } from '@/data/services';
+import { ServiceItem } from '@/types';
 import { motion } from 'framer-motion';
 import {
   Monitor,
@@ -34,20 +35,30 @@ const iconMap: Record<string, React.ElementType> = {
 export default function ServicesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [services, setServices] = useState<ServiceItem[]>(servicesData);
+
+  React.useEffect(() => {
+    fetch('/api/services')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          setServices(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filterCategories = [
     'All',
-    'Website Design',
-    'Web Development',
-    'eCommerce Solutions',
-    'Web Applications',
-    'UI/UX Design',
+    'Website Development',
+    'App Development',
+    'Video Editing',
   ];
 
   const filteredServices =
     selectedFilter === 'All'
-      ? servicesData
-      : servicesData.filter((s) => s.title === selectedFilter);
+      ? services
+      : services.filter((s) => s.title.toLowerCase().includes(selectedFilter.toLowerCase()));
 
   return (
     <div className="min-h-screen flex flex-col bg-white selection:bg-purple-500 selection:text-white">
@@ -63,7 +74,7 @@ export default function ServicesPage() {
               <span className="purple-gradient-text">Real Impact.</span>
             </h1>
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              From bespoke web designs to complex cloud applications, Bhoot Tech builds high-performance digital products engineered for long-term scalability.
+              From bespoke web designs to complex cloud applications and viral video editing, YJ DEVELOPERS builds high-performance digital products engineered for long-term scalability.
             </p>
           </div>
 

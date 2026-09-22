@@ -53,13 +53,13 @@ export default function AboutPage() {
         <Container size="wide">
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge className="mb-4">ABOUT BHOOT TECH</Badge>
+            <Badge className="mb-4">ABOUT YJ DEVELOPERS</Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12] mb-6">
               Engineering Invisible Complexity Into{' '}
               <span className="purple-gradient-text">Visible Impact.</span>
             </h1>
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              Bhoot Tech is a modern web development studio. We help ambitious businesses design, build, and scale world-class web applications and eCommerce experiences.
+              YJ DEVELOPERS is a premier modern digital agency. We help ambitious businesses design, build, and scale world-class web applications, mobile apps, and high-impact video editing experiences.
             </p>
           </div>
 
@@ -71,10 +71,10 @@ export default function AboutPage() {
                   Our Engineering Philosophy
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-4">
-                  &ldquo;Bhoot&rdquo; represents invisible precision.
+                  &ldquo;YJ DEVELOPERS&rdquo; represents precision & impact.
                 </h3>
                 <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  Great software feels effortless. The immense complexity of server architecture, database indexing, edge caching, and WCAG accessibility remains invisible to the end user—leaving only visible impact and delight.
+                  Great software feels effortless. The immense complexity of server architecture, database indexing, edge caching, and multimedia post-production remains invisible to the end user—leaving only visible impact and delight.
                 </p>
               </div>
 

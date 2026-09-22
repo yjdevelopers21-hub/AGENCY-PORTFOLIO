@@ -111,7 +111,7 @@ export function Footer() {
 
         {/* Bottom Bar: Copyright & Legal */}
         <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
-          <p>© {companyData.copyrightYear} Bhoot Tech. All rights reserved.</p>
+          <p>© {companyData.copyrightYear} YJ DEVELOPERS. All rights reserved.</p>
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {footerQuickLinks.map((link) => (
               <Link

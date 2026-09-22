@@ -11,8 +11,8 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ isOpen, onClose }: ProjectModalProps) {
-  const [selectedService, setSelectedService] = useState('Website Design');
-  const [budget, setBudget] = useState('$5k - $10k');
+  const [selectedService, setSelectedService] = useState('Website Development');
+  const [selectedScope, setSelectedScope] = useState('Growth / Scale');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,14 +23,12 @@ export function ProjectModal({ isOpen, onClose }: ProjectModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const services = [
-    'Website Design',
-    'Web Development',
-    'eCommerce',
-    'Web Application',
-    'UI/UX Design',
+    'Website Development',
+    'App Development',
+    'Video Editing',
   ];
 
-  const budgetRanges = ['< $5k', '$5k - $10k', '$10k - $25k', '$25k+'];
+  const scopeRanges = ['Starter / MVP', 'Growth / Scale', 'Enterprise', 'Custom / Flexible'];
 
   // Scroll Lock
   useEffect(() => {
@@ -55,13 +53,31 @@ export function ProjectModal({ isOpen, onClose }: ProjectModalProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.company || '',
+          service: selectedService,
+          scopeLevel: selectedScope,
+          timeline: 'Flexible',
+          subject: `Project Inquiry: ${selectedService} (${selectedScope})`,
+          message: formData.message,
+          source: 'project_estimator',
+        }),
+      });
+    } catch (err) {
+      console.error('Error submitting inquiry:', err);
+    } finally {
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 1200);
+    }
   };
 
   const handleReset = () => {
@@ -146,24 +162,24 @@ export function ProjectModal({ isOpen, onClose }: ProjectModalProps) {
                     </div>
                   </div>
 
-                  {/* Budget Selection */}
+                  {/* Scope Tier Selection */}
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                      Estimated Budget Range
+                      Project Scope & Complexity
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {budgetRanges.map((b) => (
+                      {scopeRanges.map((s) => (
                         <button
                           type="button"
-                          key={b}
-                          onClick={() => setBudget(b)}
+                          key={s}
+                          onClick={() => setSelectedScope(s)}
                           className={`text-xs font-medium py-2 px-2.5 rounded-xl border text-center transition-all ${
-                            budget === b
+                            selectedScope === s
                               ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
                               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                           }`}
                         >
-                          {b}
+                          {s}
                         </button>
                       ))}
                     </div>
@@ -256,7 +272,7 @@ export function ProjectModal({ isOpen, onClose }: ProjectModalProps) {
                   Inquiry Received!
                 </h3>
                 <p className="text-sm text-slate-600 max-w-md mx-auto mb-8">
-                  Thank you, <span className="font-bold text-slate-900">{formData.name}</span>. Our engineering team at Bhoot Tech will review your project details and reach out within 24 hours.
+                  Thank you, <span className="font-bold text-slate-900">{formData.name}</span>. Our engineering team at YJ DEVELOPERS will review your project details and reach out within 24 hours.
                 </p>
                 <Button variant="dark" onClick={handleReset}>
                   Close Window

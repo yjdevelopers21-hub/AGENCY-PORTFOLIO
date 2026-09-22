@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ProjectModal } from '@/components/ui/project-modal';
 import { projectsData } from '@/data/projects';
+import { ProjectItem } from '@/types';
 import { motion } from 'framer-motion';
 import { Search, ArrowRight } from 'lucide-react';
 
@@ -16,15 +17,29 @@ export default function WorkPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [projects, setProjects] = useState<ProjectItem[]>(projectsData);
 
-  const categories = ['All', 'E-COMMERCE', 'REAL ESTATE', 'EDUCATION'];
+  React.useEffect(() => {
+    fetch('/api/projects')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          setProjects(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
-  const filteredProjects = projectsData.filter((p) => {
-    const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+  const categories = ['All', 'Website Development', 'App Development', 'Video Editing', 'E-COMMERCE', 'REAL ESTATE', 'EDUCATION'];
+
+  const filteredProjects = projects.filter((p) => {
+    const matchesCategory =
+      activeCategory === 'All' ||
+      (p.category || '').toLowerCase() === activeCategory.toLowerCase();
     const matchesSearch =
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.tags?.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (p.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.tags || []).some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return matchesCategory && matchesSearch;
   });
@@ -140,7 +155,7 @@ export default function WorkPage() {
                           {/* Tech Stack Tags */}
                           {project.tags && (
                             <div className="flex flex-wrap gap-1.5 mb-6">
-                              {project.tags.map((tag) => (
+                              {project.tags.map((tag: string) => (
                                 <span
                                   key={tag}
                                   className="text-[10px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md"

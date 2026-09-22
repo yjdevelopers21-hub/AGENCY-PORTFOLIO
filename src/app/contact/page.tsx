@@ -26,13 +26,27 @@ export default function ContactPage() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          source: 'contact_page',
+        }),
+      });
+    } catch (err) {
+      console.error('Error sending message:', err);
+    } finally {
       setIsSubmitting(false);
       setSubmitted(true);
-    }, 1200);
+    }
   };
 
   const faqs = [
@@ -65,10 +79,10 @@ export default function ContactPage() {
             <Badge className="mb-4">LET&apos;S TALK</Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12] mb-6">
               Start Your Project With{' '}
-              <span className="purple-gradient-text">Bhoot Tech.</span>
+              <span className="purple-gradient-text">YJ DEVELOPERS.</span>
             </h1>
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              Have a new web project, redesign, or technical inquiry? Reach out to our engineering team directly.
+              Have a new project, mobile app, redesign, or video editing inquiry? Reach out to our team directly.
             </p>
           </div>
 
@@ -90,11 +104,11 @@ export default function ContactPage() {
                       <Mail className="w-5 h-5 text-purple-400 shrink-0" />
                       <div>
                         <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Email</span>
-                        <span className="text-sm font-semibold text-white">hello@bhoottech.com</span>
+                        <span className="text-sm font-semibold text-white">hello@yjdevelopers.com</span>
                       </div>
                     </div>
                     <button
-                      onClick={() => handleCopy('hello@bhoottech.com', 'email')}
+                      onClick={() => handleCopy('hello@yjdevelopers.com', 'email')}
                       className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
                       title="Copy Email"
                     >
