@@ -14,27 +14,25 @@ export async function GET() {
     const conn = await connectToDatabase();
     if (conn) {
       const testimonials = await Testimonial.find().sort({ order: 1, createdAt: -1 });
-      if (testimonials.length > 0) {
-        const formatted = testimonials.map((t) => ({
-          id: t._id.toString(),
-          _id: t._id.toString(),
-          quote: t.quote,
-          author: t.author,
-          role: t.role,
-          company: t.company,
-          avatar: t.avatar,
-          rating: t.rating,
-          featured: t.featured,
-          order: t.order || 0,
-        }));
-        return NextResponse.json({
-          success: true,
-          data: formatted,
-          source: 'mongodb_atlas',
-        });
-      }
-
+      const formatted = testimonials.map((t) => ({
+        id: t._id.toString(),
+        _id: t._id.toString(),
+        quote: t.quote,
+        author: t.author,
+        role: t.role,
+        company: t.company,
+        avatar: t.avatar,
+        rating: t.rating,
+        featured: t.featured,
+        order: t.order || 0,
+      }));
+      return NextResponse.json({
+        success: true,
+        data: formatted,
+        source: 'mongodb_atlas',
+      });
     }
+
 
     return NextResponse.json({
       success: true,
