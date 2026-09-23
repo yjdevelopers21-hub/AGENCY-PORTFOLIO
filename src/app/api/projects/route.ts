@@ -11,12 +11,31 @@ export async function GET() {
     if (conn) {
       const projects = await Project.find().sort({ order: 1, createdAt: -1 });
       if (projects.length > 0) {
+        const formatted = projects.map((p) => ({
+          id: p.slug || p._id.toString(),
+          _id: p._id.toString(),
+          slug: p.slug,
+          title: p.title,
+          category: p.category,
+          description: p.description,
+          longDescription: p.longDescription || p.description,
+          client: p.client || '',
+          timeline: p.timeline || '',
+          services: p.services || [],
+          image: p.image || '/landing-page.png',
+          tags: p.tags || [],
+          featured: p.featured,
+          order: p.order || 0,
+          liveUrl: p.liveUrl || '',
+          githubUrl: p.githubUrl || '',
+        }));
         return NextResponse.json({
           success: true,
-          data: projects,
+          data: formatted,
           source: 'mongodb_atlas',
         });
       }
+
     }
 
     // Fallback data

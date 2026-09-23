@@ -55,9 +55,13 @@ export function Services() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {services.map((service, index) => {
             const IconComponent = iconMap[service.iconName] || Monitor;
+            const itemKey = service.id || (service as { _id?: string; slug?: string })._id || (service as { _id?: string; slug?: string }).slug || `service-${index}`;
+            const description = service.description || (service as { shortDescription?: string }).shortDescription || '';
+            const href = service.href || '/services';
+
             return (
               <motion.div
-                key={service.id}
+                key={itemKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -77,14 +81,14 @@ export function Services() {
 
                     {/* Description */}
                     <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                      {service.description}
+                      {description}
                     </p>
                   </div>
 
                   {/* Arrow Action */}
                   <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-purple-600 font-medium text-sm group-hover:text-purple-700">
                     <Link
-                      href={service.href}
+                      href={href}
                       className="inline-flex items-center gap-2"
                     >
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -95,6 +99,7 @@ export function Services() {
             );
           })}
         </div>
+
       </Container>
     </section>
   );

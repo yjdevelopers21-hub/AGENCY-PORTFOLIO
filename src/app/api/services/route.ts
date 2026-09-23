@@ -11,12 +11,28 @@ export async function GET() {
     if (conn) {
       const services = await Service.find({ active: true }).sort({ order: 1 });
       if (services.length > 0) {
+        const formatted = services.map((s) => ({
+          id: s.slug || s._id.toString(),
+          _id: s._id.toString(),
+          slug: s.slug,
+          title: s.title,
+          iconName: s.iconName || 'Monitor',
+          description: s.shortDescription || s.fullDescription || '',
+          shortDescription: s.shortDescription,
+          fullDescription: s.fullDescription,
+          features: s.features || [],
+          scopeOptions: s.scopeOptions || [],
+          href: `/services`,
+          order: s.order || 0,
+          active: s.active,
+        }));
         return NextResponse.json({
           success: true,
-          data: services,
+          data: formatted,
           source: 'mongodb_atlas',
         });
       }
+
     }
 
     return NextResponse.json({

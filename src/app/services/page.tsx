@@ -99,9 +99,12 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {filteredServices.map((service, index) => {
               const IconComponent = iconMap[service.iconName] || Monitor;
+              const itemKey = service.id || (service as { _id?: string; slug?: string })._id || (service as { _id?: string; slug?: string }).slug || `service-${index}`;
+              const description = service.description || (service as { shortDescription?: string }).shortDescription || '';
+
               return (
                 <motion.div
-                  key={service.id}
+                  key={itemKey}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
@@ -115,8 +118,9 @@ export default function ServicesPage() {
                         {service.title}
                       </h3>
                       <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                        {service.description}
+                        {description}
                       </p>
+
 
                       {/* Deliverables Checklist */}
                       <div className="space-y-2 border-t border-slate-100 pt-4 mb-6">

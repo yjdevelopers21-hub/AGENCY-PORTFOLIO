@@ -37,15 +37,18 @@ export function SelectedWork() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/work/${project.id}`}>
+          {projects.map((project, index) => {
+            const projectKey = project.id || (project as { _id?: string; slug?: string })._id || (project as { _id?: string; slug?: string }).slug || `project-${index}`;
+            return (
+              <motion.div
+                key={projectKey}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Link href={`/work/${project.id || projectKey}`}>
+
                 <Card className="h-full flex flex-col justify-between overflow-hidden p-0 group border border-slate-200/80 bg-white cursor-pointer bhoot-card-hover">
                   {/* Project Banner Mockup */}
                   <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden">
@@ -148,9 +151,11 @@ export function SelectedWork() {
                 </Card>
               </Link>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </Container>
+
     </section>
   );
 }

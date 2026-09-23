@@ -38,14 +38,17 @@ export function Testimonials() {
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {testimonials.map((item, idx) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-            >
+          {testimonials.map((item, idx) => {
+            const testimonialKey = item.id || (item as { _id?: string })._id || `testimonial-${idx}`;
+            return (
+              <motion.div
+                key={testimonialKey}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+              >
+
               <Card className="h-full flex flex-col justify-between p-8 bg-slate-50/50 border border-slate-200/60 hover:bg-white transition-colors duration-300">
                 <div>
                   {/* Quote Icon */}
@@ -75,8 +78,10 @@ export function Testimonials() {
                 </div>
               </Card>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
+
       </Container>
     </section>
   );
