@@ -13,7 +13,7 @@ export function Testimonials() {
   const [testimonials, setTestimonials] = React.useState<TestimonialItem[]>(testimonialsData);
 
   React.useEffect(() => {
-    fetch('/api/testimonials')
+    fetch('/api/testimonials', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data && data.data.length > 0) {
@@ -22,6 +22,7 @@ export function Testimonials() {
       })
       .catch(() => {});
   }, []);
+
 
   return (
     <section className="py-20 sm:py-28 bg-white">

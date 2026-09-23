@@ -4,6 +4,10 @@ import { Service } from '@/models/Service';
 import { servicesData } from '@/data/services';
 import { getAuthenticatedAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 // GET: Return all services (Public & Admin)
 export async function GET() {
   try {

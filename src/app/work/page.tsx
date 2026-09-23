@@ -20,7 +20,7 @@ export default function WorkPage() {
   const [projects, setProjects] = useState<ProjectItem[]>(projectsData);
 
   React.useEffect(() => {
-    fetch('/api/projects')
+    fetch('/api/projects', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data && data.data.length > 0) {
@@ -29,6 +29,7 @@ export default function WorkPage() {
       })
       .catch(() => {});
   }, []);
+
 
   const categories = ['All', 'Website Development', 'App Development', 'Video Editing', 'E-COMMERCE', 'REAL ESTATE', 'EDUCATION'];
 

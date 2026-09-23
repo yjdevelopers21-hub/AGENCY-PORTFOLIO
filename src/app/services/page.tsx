@@ -38,7 +38,7 @@ export default function ServicesPage() {
   const [services, setServices] = useState<ServiceItem[]>(servicesData);
 
   React.useEffect(() => {
-    fetch('/api/services')
+    fetch('/api/services', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data && data.data.length > 0) {
@@ -47,6 +47,7 @@ export default function ServicesPage() {
       })
       .catch(() => {});
   }, []);
+
 
   const filterCategories = [
     'All',

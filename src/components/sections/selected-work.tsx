@@ -15,7 +15,7 @@ export function SelectedWork() {
   const [projects, setProjects] = React.useState<ProjectItem[]>(projectsData);
 
   React.useEffect(() => {
-    fetch('/api/projects')
+    fetch('/api/projects', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data && data.data.length > 0) {
@@ -24,6 +24,7 @@ export function SelectedWork() {
       })
       .catch(() => {});
   }, []);
+
 
   return (
     <section id="work" className="py-16 sm:py-28 bg-slate-50/50">

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { connectToDatabase } from '@/lib/mongodb';
 import { Project } from '@/models/Project';
 import { getAuthenticatedAdmin } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(
   req: NextRequest,
@@ -11,9 +15,9 @@ export async function GET(
     const { id } = await context.params;
     const conn = await connectToDatabase();
     if (conn) {
-      const project = await Project.findOne({
-        $or: [{ _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }, { slug: id }],
-      });
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { slug: id };
+      const project = await Project.findOne(query);
       if (project) {
         return NextResponse.json({ success: true, data: project });
       }
@@ -40,7 +44,9 @@ export async function PUT(
 
     const conn = await connectToDatabase();
     if (conn) {
-      const updated = await Project.findByIdAndUpdate(id, body, { new: true });
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { slug: id };
+      const updated = await Project.findOneAndUpdate(query, body, { new: true });
       return NextResponse.json({ success: true, data: updated });
     }
 
@@ -64,7 +70,9 @@ export async function DELETE(
     const { id } = await context.params;
     const conn = await connectToDatabase();
     if (conn) {
-      await Project.findByIdAndDelete(id);
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { slug: id };
+      await Project.findOneAndDelete(query);
       return NextResponse.json({ success: true, message: 'Project deleted' });
     }
 
@@ -74,3 +82,4 @@ export async function DELETE(
     return NextResponse.json({ success: false, error: msg }, { status: 500 });
   }
 }
+

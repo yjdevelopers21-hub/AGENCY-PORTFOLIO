@@ -4,6 +4,10 @@ import { SiteSetting } from '@/models/SiteSetting';
 import { companyData } from '@/data/company';
 import { getAuthenticatedAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 // GET: Return site settings
 export async function GET() {
   try {

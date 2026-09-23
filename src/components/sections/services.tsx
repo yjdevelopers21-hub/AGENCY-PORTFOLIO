@@ -31,7 +31,7 @@ export function Services() {
   const [services, setServices] = React.useState<ServiceItem[]>(servicesData);
 
   React.useEffect(() => {
-    fetch('/api/services')
+    fetch('/api/services', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.data && data.data.length > 0) {
@@ -40,6 +40,7 @@ export function Services() {
       })
       .catch(() => {});
   }, []);
+
 
   return (
     <section id="services" className="py-20 sm:py-28 bg-white">

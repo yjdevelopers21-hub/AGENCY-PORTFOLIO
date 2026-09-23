@@ -149,12 +149,12 @@ export default function AdminDashboardPage() {
 
   const loadDashboardData = useCallback(async () => {
     try {
-      fetch('/api/admin/stats').then((res) => res.json()).then((d) => d.success && setStats(d.data));
-      fetch('/api/inquiries').then((res) => res.json()).then((d) => d.success && setInquiries(d.data));
-      fetch('/api/projects').then((res) => res.json()).then((d) => d.success && setProjects(d.data));
-      fetch('/api/services').then((res) => res.json()).then((d) => d.success && setServices(d.data));
-      fetch('/api/testimonials').then((res) => res.json()).then((d) => d.success && setTestimonials(d.data));
-      fetch('/api/settings').then((res) => res.json()).then((d) => {
+      fetch('/api/admin/stats', { cache: 'no-store' }).then((res) => res.json()).then((d) => d.success && setStats(d.data));
+      fetch('/api/inquiries', { cache: 'no-store' }).then((res) => res.json()).then((d) => d.success && setInquiries(d.data));
+      fetch('/api/projects', { cache: 'no-store' }).then((res) => res.json()).then((d) => d.success && setProjects(d.data));
+      fetch('/api/services', { cache: 'no-store' }).then((res) => res.json()).then((d) => d.success && setServices(d.data));
+      fetch('/api/testimonials', { cache: 'no-store' }).then((res) => res.json()).then((d) => d.success && setTestimonials(d.data));
+      fetch('/api/settings', { cache: 'no-store' }).then((res) => res.json()).then((d) => {
         if (d.success && d.data) {
           setSettingsForm({
             name: d.data.name || 'YJ DEVELOPERS',
@@ -170,6 +170,7 @@ export default function AdminDashboardPage() {
       console.error('Error loading dashboard data:', e);
     }
   }, []);
+
 
   // Initial Auth Check & Data Fetching
   useEffect(() => {

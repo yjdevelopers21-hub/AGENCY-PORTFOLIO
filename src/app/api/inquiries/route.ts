@@ -3,6 +3,10 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { Inquiry } from '@/models/Inquiry';
 import { getAuthenticatedAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 // In-memory fallback for local testing when Atlas is not yet connected
 const inMemoryInquiries: Array<{
   _id: string;

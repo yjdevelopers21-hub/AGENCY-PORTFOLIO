@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { connectToDatabase } from '@/lib/mongodb';
 import { Inquiry } from '@/models/Inquiry';
 import { getAuthenticatedAdmin } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function PATCH(
   req: NextRequest,
@@ -19,8 +23,10 @@ export async function PATCH(
 
     const conn = await connectToDatabase();
     if (conn) {
-      const updated = await Inquiry.findByIdAndUpdate(
-        id,
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { _id: null };
+      const updated = await Inquiry.findOneAndUpdate(
+        query,
         { ...(status && { status }), ...(notes !== undefined && { notes }) },
         { new: true }
       );
@@ -47,7 +53,9 @@ export async function DELETE(
     const { id } = await context.params;
     const conn = await connectToDatabase();
     if (conn) {
-      await Inquiry.findByIdAndDelete(id);
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { _id: null };
+      await Inquiry.findOneAndDelete(query);
       return NextResponse.json({ success: true, message: 'Inquiry deleted' });
     }
 
@@ -57,3 +65,4 @@ export async function DELETE(
     return NextResponse.json({ success: false, error: msg }, { status: 500 });
   }
 }
+

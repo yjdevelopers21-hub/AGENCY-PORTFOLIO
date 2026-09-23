@@ -4,6 +4,10 @@ import { Testimonial } from '@/models/Testimonial';
 import { testimonialsData } from '@/data/testimonials';
 import { getAuthenticatedAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 // GET: Return all testimonials
 export async function GET() {
   try {

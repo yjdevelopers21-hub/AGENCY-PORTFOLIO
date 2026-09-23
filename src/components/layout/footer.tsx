@@ -13,6 +13,31 @@ import { companyData } from '@/data/company';
 import { Mail, Phone } from 'lucide-react';
 
 export function Footer() {
+  const [settings, setSettings] = React.useState({
+    tagline: companyData.tagline,
+    subtagline: companyData.subtagline,
+    email: companyData.email,
+    phone: companyData.phone,
+    copyrightYear: companyData.copyrightYear,
+  });
+
+  React.useEffect(() => {
+    fetch('/api/settings', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((d) => {
+        if (d.success && d.data) {
+          setSettings({
+            tagline: d.data.tagline || companyData.tagline,
+            subtagline: d.data.subtagline || companyData.subtagline,
+            email: d.data.email || companyData.email,
+            phone: d.data.phone || companyData.phone,
+            copyrightYear: d.data.copyrightYear || companyData.copyrightYear,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <footer className="bg-white border-t border-slate-200/80 pt-12 sm:pt-16 pb-8 sm:pb-12 text-slate-600">
       <Container size="wide">
@@ -21,11 +46,12 @@ export function Footer() {
           <div className="sm:col-span-2 flex flex-col items-start pr-0 lg:pr-6">
             <Logo className="mb-4" />
             <p className="text-sm font-semibold text-purple-700 tracking-wide mb-2 sm:mb-3">
-              {companyData.tagline}
+              {settings.tagline}
             </p>
             <p className="text-sm text-slate-500 leading-relaxed max-w-sm mb-6">
-              {companyData.subtagline}
+              {settings.subtagline}
             </p>
+
 
             {/* Social Links */}
             <div className="flex items-center gap-3">
@@ -92,18 +118,18 @@ export function Footer() {
             </p>
             <div className="space-y-2 sm:space-y-2.5">
               <a
-                href={`mailto:${companyData.email}`}
+                href={`mailto:${settings.email}`}
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors"
               >
                 <Mail className="w-4 h-4 text-purple-600 shrink-0" />
-                <span>{companyData.email}</span>
+                <span>{settings.email}</span>
               </a>
               <a
-                href={`tel:${companyData.phone}`}
+                href={`tel:${settings.phone}`}
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-800 hover:text-purple-600 transition-colors block"
               >
                 <Phone className="w-4 h-4 text-purple-600 shrink-0" />
-                <span>{companyData.phone}</span>
+                <span>{settings.phone}</span>
               </a>
             </div>
           </div>
@@ -111,7 +137,8 @@ export function Footer() {
 
         {/* Bottom Bar: Copyright & Legal */}
         <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
-          <p>© {companyData.copyrightYear} YJ DEVELOPERS. All rights reserved.</p>
+          <p>© {settings.copyrightYear} YJ DEVELOPERS. All rights reserved.</p>
+
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {footerQuickLinks.map((link) => (
               <Link

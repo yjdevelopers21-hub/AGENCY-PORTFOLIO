@@ -6,6 +6,10 @@ import { Service } from '@/models/Service';
 import { Testimonial } from '@/models/Testimonial';
 import { getAuthenticatedAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 export async function GET() {
   try {
     const admin = await getAuthenticatedAdmin();

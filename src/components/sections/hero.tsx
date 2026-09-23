@@ -14,6 +14,28 @@ interface HeroProps {
 }
 
 export function Hero({ onOpenModal }: HeroProps) {
+  const [settings, setSettings] = React.useState({
+    tagline: 'INVISIBLE COMPLEXITY. VISIBLE IMPACT.',
+    subtagline:
+      'YJ DEVELOPERS designs and develops fast, modern and scalable websites, mobile applications and high-impact video editing for ambitious businesses.',
+  });
+
+  React.useEffect(() => {
+    fetch('/api/settings', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((d) => {
+        if (d.success && d.data) {
+          setSettings({
+            tagline: d.data.tagline || 'INVISIBLE COMPLEXITY. VISIBLE IMPACT.',
+            subtagline:
+              d.data.subtagline ||
+              'YJ DEVELOPERS designs and develops fast, modern and scalable websites, mobile applications and high-impact video editing for ambitious businesses.',
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const capabilities = [
     {
       icon: Smartphone,
@@ -48,7 +70,7 @@ export function Hero({ onOpenModal }: HeroProps) {
           >
             {/* Eyebrow Label */}
             <div className="mb-4 sm:mb-6">
-              <Badge>INVISIBLE COMPLEXITY. VISIBLE IMPACT.</Badge>
+              <Badge>{settings.tagline.toUpperCase()}</Badge>
             </div>
 
             {/* Main Headline */}
@@ -59,9 +81,9 @@ export function Hero({ onOpenModal }: HeroProps) {
 
             {/* Supporting Paragraph Copy */}
             <p className="text-base sm:text-lg lg:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mb-8 sm:mb-10">
-              YJ DEVELOPERS designs and develops fast, modern and scalable websites,
-              mobile applications and high-impact video editing for ambitious businesses.
+              {settings.subtagline}
             </p>
+
 
             {/* Action Buttons: Full width on small mobile screens for optimal ergonomics */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto mb-10 sm:mb-14">

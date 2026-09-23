@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { connectToDatabase } from '@/lib/mongodb';
 import { Service } from '@/models/Service';
 import { getAuthenticatedAdmin } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function PUT(
   req: NextRequest,
@@ -18,7 +22,9 @@ export async function PUT(
 
     const conn = await connectToDatabase();
     if (conn) {
-      const updated = await Service.findByIdAndUpdate(id, body, { new: true });
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { slug: id };
+      const updated = await Service.findOneAndUpdate(query, body, { new: true });
       return NextResponse.json({ success: true, data: updated });
     }
 
@@ -42,7 +48,9 @@ export async function DELETE(
     const { id } = await context.params;
     const conn = await connectToDatabase();
     if (conn) {
-      await Service.findByIdAndDelete(id);
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const query = isObjectId ? { _id: id } : { slug: id };
+      await Service.findOneAndDelete(query);
       return NextResponse.json({ success: true, message: 'Service deleted' });
     }
 
@@ -52,3 +60,4 @@ export async function DELETE(
     return NextResponse.json({ success: false, error: msg }, { status: 500 });
   }
 }
+
