@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProjectModal } from '@/components/ui/project-modal';
 import { projectsData } from '@/data/projects';
-import { ArrowLeft, ExternalLink, Zap, Shield } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Zap, Shield, Code2, Globe, Calendar, Building2, CheckCircle2 } from 'lucide-react';
 
 interface CaseStudyParams {
   params: Promise<{ id: string }>;
@@ -71,7 +71,22 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
 
           {/* Case Study Hero */}
           <div className="max-w-4xl mb-12">
-            <Badge className="mb-4">{project.category}</Badge>
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <Badge>{project.category}</Badge>
+              {project.client && (
+                <span className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+                  <Building2 className="w-3.5 h-3.5 text-purple-600" />
+                  {project.client}
+                </span>
+              )}
+              {project.timeline && (
+                <span className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+                  <Calendar className="w-3.5 h-3.5 text-purple-600" />
+                  {project.timeline}
+                </span>
+              )}
+            </div>
+
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12] mb-6">
               {project.title}
             </h1>
@@ -88,15 +103,31 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
               >
                 Inquire For Similar Project
               </Button>
-              <a
-                href={project.liveUrl || '#'}
-                target={project.liveUrl ? '_blank' : '_self'}
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all"
-              >
-                <span>Visit Live Site</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-xs font-bold text-white shadow-md transition-all cursor-pointer"
+                >
+                  <Globe className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Visit Live Site</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                </a>
+              )}
+
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all"
+                >
+                  <Code2 className="w-3.5 h-3.5 text-slate-800" />
+                  <span>Source Code</span>
+                </a>
+              )}
             </div>
           </div>
 
@@ -128,12 +159,12 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                 High-Performance Architecture
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed">
-                {project.longDescription || 'Engineered with ultra-fast server rendering, client-side state caching, and responsive micro-interactions.'}
+                {project.longDescription || project.description || 'Engineered with ultra-fast server rendering, client-side state caching, and responsive micro-interactions.'}
               </p>
             </div>
 
             <div className="relative z-10 flex flex-wrap gap-2">
-              {project.tags?.map((tag) => (
+              {(project.tags || []).map((tag) => (
                 <span
                   key={tag}
                   className="text-xs font-semibold bg-slate-800/80 border border-slate-700 text-slate-200 px-3 py-1 rounded-lg"
@@ -145,15 +176,14 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
           </div>
 
           {/* Details Breakdown Grid */}
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             <div className="lg:col-span-8 space-y-10">
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">
                   The Client Challenge
                 </h3>
-                <p className="text-base text-slate-600 leading-relaxed">
-                  The client required a modern, highly scalable platform capable of delivering sub-second page loads across mobile and desktop devices. Previous legacy architecture suffered from slow initial renders and conversion drop-offs.
+                <p className="text-base text-slate-600 leading-relaxed whitespace-pre-line">
+                  {project.challenge || 'The client required a modern, highly scalable platform capable of delivering sub-second page loads across mobile and desktop devices. Previous legacy architecture suffered from slow initial renders and conversion drop-offs.'}
                 </p>
               </div>
 
@@ -161,8 +191,8 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">
                   The Engineering Solution
                 </h3>
-                <p className="text-base text-slate-600 leading-relaxed mb-6">
-                  YJ DEVELOPERS architected a modern Next.js solution leveraging React Server Components, custom Tailwind UI design tokens, dynamic image optimization, and edge infrastructure.
+                <p className="text-base text-slate-600 leading-relaxed mb-6 whitespace-pre-line">
+                  {project.solution || 'YJ DEVELOPERS architected a modern Next.js solution leveraging React Server Components, custom Tailwind UI design tokens, dynamic image optimization, and edge infrastructure.'}
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -187,30 +217,55 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                   </Card>
                 </div>
               </div>
+
+              {project.services && project.services.length > 0 && (
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                    Key Deliverables & Services
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {project.services.map((srv) => (
+                      <div key={srv} className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0" />
+                        <span className="text-xs font-semibold text-slate-800">{srv}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Sidebar Results Card */}
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-4 space-y-6">
               <Card className="p-6 sm:p-8 bg-slate-900 text-white rounded-3xl border-slate-800 shadow-xl">
                 <h4 className="text-lg font-bold text-white mb-6 border-b border-slate-800 pb-4">
                   Key Metrics & Results
                 </h4>
 
                 <div className="space-y-6 mb-8">
-                  <div>
-                    <span className="text-3xl font-extrabold text-purple-400 block">99/100</span>
-                    <span className="text-xs text-slate-400 font-medium">Lighthouse Performance</span>
-                  </div>
-
-                  <div>
-                    <span className="text-3xl font-extrabold text-white block">+140%</span>
-                    <span className="text-xs text-slate-400 font-medium">User Engagement Increase</span>
-                  </div>
-
-                  <div>
-                    <span className="text-3xl font-extrabold text-purple-400 block">&lt; 0.8s</span>
-                    <span className="text-xs text-slate-400 font-medium">First Contentful Paint</span>
-                  </div>
+                  {project.metrics && project.metrics.length > 0 ? (
+                    project.metrics.map((m, idx) => (
+                      <div key={idx}>
+                        <span className="text-3xl font-extrabold text-purple-400 block">{m.value}</span>
+                        <span className="text-xs text-slate-400 font-medium">{m.label}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div>
+                        <span className="text-3xl font-extrabold text-purple-400 block">99/100</span>
+                        <span className="text-xs text-slate-400 font-medium">Lighthouse Performance</span>
+                      </div>
+                      <div>
+                        <span className="text-3xl font-extrabold text-white block">+140%</span>
+                        <span className="text-xs text-slate-400 font-medium">User Engagement Increase</span>
+                      </div>
+                      <div>
+                        <span className="text-3xl font-extrabold text-purple-400 block">&lt; 0.8s</span>
+                        <span className="text-xs text-slate-400 font-medium">First Contentful Paint</span>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <Button
@@ -221,6 +276,43 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                 >
                   Start Your Case Study
                 </Button>
+              </Card>
+
+              {/* Project Details Meta Card */}
+              <Card className="p-6 bg-slate-50 border-slate-200/80 rounded-2xl space-y-4">
+                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500">Project Overview</h5>
+                <div className="space-y-3 text-xs">
+                  {project.client && (
+                    <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                      <span className="text-slate-500">Client</span>
+                      <span className="font-bold text-slate-900">{project.client}</span>
+                    </div>
+                  )}
+                  {project.timeline && (
+                    <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                      <span className="text-slate-500">Timeline</span>
+                      <span className="font-bold text-slate-900">{project.timeline}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                    <span className="text-slate-500">Category</span>
+                    <span className="font-bold text-slate-900">{project.category}</span>
+                  </div>
+                  {project.liveUrl && (
+                    <div className="pt-2">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-2 px-3 bg-purple-50 text-purple-600 hover:bg-purple-100 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <Globe className="w-3.5 h-3.5" />
+                        <span>Visit {project.title.split('—')[0].trim()}</span>
+                        <ExternalLink className="w-3 h-3 ml-0.5" />
+                      </a>
+                    </div>
+                  )}
+                </div>
               </Card>
             </div>
           </div>

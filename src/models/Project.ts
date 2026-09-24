@@ -17,6 +17,8 @@ export interface IProject extends Document {
   order: number;
   liveUrl?: string;
   githubUrl?: string;
+  challenge?: string;
+  solution?: string;
   metrics?: { label: string; value: string }[];
   createdAt: Date;
   updatedAt: Date;
@@ -40,6 +42,8 @@ const ProjectSchema: Schema<IProject> = new Schema(
     order: { type: Number, default: 0 },
     liveUrl: { type: String, default: '' },
     githubUrl: { type: String, default: '' },
+    challenge: { type: String, default: '' },
+    solution: { type: String, default: '' },
     metrics: [
       {
         label: { type: String },

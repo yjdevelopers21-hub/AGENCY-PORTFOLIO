@@ -26,11 +26,15 @@ export async function GET() {
         timeline: p.timeline || '',
         services: p.services || [],
         image: p.image || '/landing-page.png',
+        accentColor: p.accentColor || '#7c3aed',
         tags: p.tags || [],
         featured: p.featured,
         order: p.order || 0,
         liveUrl: p.liveUrl || '',
         githubUrl: p.githubUrl || '',
+        challenge: p.challenge || '',
+        solution: p.solution || '',
+        metrics: p.metrics || [],
       }));
       return NextResponse.json({
         success: true,
@@ -64,7 +68,26 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { title, slug, category, description, longDescription, client, timeline, services, image, tags, featured, order, liveUrl, githubUrl } = body;
+    const {
+      title,
+      slug,
+      category,
+      description,
+      longDescription,
+      client,
+      timeline,
+      services,
+      image,
+      accentColor,
+      tags,
+      featured,
+      order,
+      liveUrl,
+      githubUrl,
+      challenge,
+      solution,
+      metrics,
+    } = body;
 
     if (!title || !category || !description) {
       return NextResponse.json(
@@ -87,11 +110,15 @@ export async function POST(req: NextRequest) {
         timeline: timeline || '4-6 Weeks',
         services: services || [category],
         image: image || '/landing-page.png',
+        accentColor: accentColor || '#7c3aed',
         tags: tags || [category],
         featured: featured !== undefined ? featured : true,
         order: order || 0,
         liveUrl: liveUrl || '',
         githubUrl: githubUrl || '',
+        challenge: challenge || '',
+        solution: solution || '',
+        metrics: metrics || [],
       });
 
       return NextResponse.json({

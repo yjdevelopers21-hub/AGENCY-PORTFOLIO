@@ -29,6 +29,15 @@ import {
   UploadCloud,
   ImageIcon,
   Loader2,
+  Globe,
+  Code2,
+  BarChart3,
+  FileText,
+  Tag,
+  Palette,
+  CheckCircle2,
+  Calendar,
+  Building2,
 } from 'lucide-react';
 
 interface AdminUser {
@@ -71,11 +80,20 @@ interface ProjectData {
   slug?: string;
   category: string;
   description: string;
+  longDescription?: string;
   client?: string;
   timeline?: string;
+  services?: string[];
   image?: string;
+  accentColor?: string;
   tags?: string[];
   featured?: boolean;
+  order?: number;
+  liveUrl?: string;
+  githubUrl?: string;
+  challenge?: string;
+  solution?: string;
+  metrics?: { label: string; value: string }[];
 }
 
 interface ServiceData {
@@ -123,12 +141,27 @@ export default function AdminDashboardPage() {
   const [editingProject, setEditingProject] = useState<ProjectData | null>(null);
   const [projectForm, setProjectForm] = useState({
     title: '',
+    slug: '',
     category: 'Website Development',
     description: '',
+    longDescription: '',
     client: '',
     timeline: '3-4 Weeks',
-    image: '/landing-page.png',
+    liveUrl: '',
+    githubUrl: '',
+    accentColor: '#7c3aed',
+    services: 'Website Development, UI/UX Design',
     tags: 'Next.js, Tailwind, TypeScript',
+    challenge: '',
+    solution: '',
+    metric1Value: '99/100',
+    metric1Label: 'Lighthouse Performance',
+    metric2Value: '+140%',
+    metric2Label: 'Conversion Rate',
+    metric3Value: '< 0.8s',
+    metric3Label: 'Page Load Speed',
+    image: '',
+    order: 0,
     featured: true,
   });
   const [imageUploading, setImageUploading] = useState(false);
@@ -328,19 +361,40 @@ export default function AdminDashboardPage() {
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const metrics = [
+        { value: projectForm.metric1Value, label: projectForm.metric1Label },
+        { value: projectForm.metric2Value, label: projectForm.metric2Label },
+        { value: projectForm.metric3Value, label: projectForm.metric3Label },
+      ].filter((m) => m.value && m.value.trim() && m.label && m.label.trim());
+
       const payload = {
         title: projectForm.title,
+        slug: projectForm.slug || projectForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
         category: projectForm.category,
         description: projectForm.description,
+        longDescription: projectForm.longDescription || projectForm.description,
         client: projectForm.client,
         timeline: projectForm.timeline,
-        image: projectForm.image,
-        tags: projectForm.tags.split(',').map((t) => t.trim()),
+        liveUrl: projectForm.liveUrl,
+        githubUrl: projectForm.githubUrl,
+        accentColor: projectForm.accentColor || '#7c3aed',
+        services: typeof projectForm.services === 'string'
+          ? projectForm.services.split(',').map((s) => s.trim()).filter(Boolean)
+          : projectForm.services,
+        tags: typeof projectForm.tags === 'string'
+          ? projectForm.tags.split(',').map((t) => t.trim()).filter(Boolean)
+          : projectForm.tags,
+        challenge: projectForm.challenge,
+        solution: projectForm.solution,
+        metrics,
+        image: projectForm.image || '/landing-page.png',
+        order: Number(projectForm.order) || 0,
         featured: projectForm.featured,
       };
 
-      if (editingProject && editingProject._id) {
-        await fetch(`/api/projects/${editingProject._id}`, {
+      if (editingProject && (editingProject._id || editingProject.id)) {
+        const id = editingProject._id || editingProject.id;
+        await fetch(`/api/projects/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -358,6 +412,7 @@ export default function AdminDashboardPage() {
       loadDashboardData();
     } catch (e) {
       console.error(e);
+      alert('Error saving project');
     }
   };
 
@@ -885,12 +940,27 @@ export default function AdminDashboardPage() {
                     setEditingProject(null);
                     setProjectForm({
                       title: '',
+                      slug: '',
                       category: 'Website Development',
                       description: '',
+                      longDescription: '',
                       client: '',
                       timeline: '3-4 Weeks',
-                      image: '/landing-page.png',
+                      liveUrl: '',
+                      githubUrl: '',
+                      accentColor: '#7c3aed',
+                      services: 'Website Development, UI/UX Design',
                       tags: 'Next.js, Tailwind, TypeScript',
+                      challenge: '',
+                      solution: '',
+                      metric1Value: '99/100',
+                      metric1Label: 'Lighthouse Performance',
+                      metric2Value: '+140%',
+                      metric2Label: 'Conversion Rate',
+                      metric3Value: '< 0.8s',
+                      metric3Label: 'Page Load Speed',
+                      image: '',
+                      order: 0,
                       featured: true,
                     });
                     setProjectModalOpen(true);
@@ -924,10 +994,26 @@ export default function AdminDashboardPage() {
                         <span className="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold rounded uppercase tracking-wider">
                           {proj.category}
                         </span>
+                        {proj.liveUrl && (
+                          <a
+                            href={proj.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute top-2 right-2 p-1.5 bg-slate-950/80 hover:bg-purple-600 backdrop-blur-md text-white rounded-lg transition-colors"
+                            title="Visit Live Site"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
                       </div>
 
                       <div className="p-5">
-                        <h4 className="text-base font-bold text-white mb-2">{proj.title}</h4>
+                        <h4 className="text-base font-bold text-white mb-1.5">{proj.title}</h4>
+                        {proj.client && (
+                          <span className="text-[11px] text-purple-400 font-medium block mb-2">
+                            Client: {proj.client}
+                          </span>
+                        )}
                         <p className="text-xs text-slate-400 line-clamp-2 mb-4">{proj.description}</p>
                         <div className="flex flex-wrap gap-1.5">
                           {(proj.tags || []).map((t: string) => (
@@ -942,22 +1028,50 @@ export default function AdminDashboardPage() {
                     <div className="p-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
                       <span className="text-slate-500 text-[11px]">{proj.timeline || '4-6 Weeks'}</span>
                       <div className="flex items-center gap-2">
+                        {proj.liveUrl && (
+                          <a
+                            href={proj.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-purple-300"
+                            title="Open Live Site"
+                          >
+                            <Globe className="w-3.5 h-3.5" />
+                          </a>
+                        )}
                         <button
                           onClick={() => {
                             setEditingProject(proj);
+                            const m = proj.metrics || [];
                             setProjectForm({
-                              title: proj.title,
-                              category: proj.category,
-                              description: proj.description,
+                              title: proj.title || '',
+                              slug: proj.slug || proj.id || '',
+                              category: proj.category || 'Website Development',
+                              description: proj.description || '',
+                              longDescription: proj.longDescription || proj.description || '',
                               client: proj.client || '',
                               timeline: proj.timeline || '3-4 Weeks',
-                              image: proj.image || '/landing-page.png',
+                              liveUrl: proj.liveUrl || '',
+                              githubUrl: proj.githubUrl || '',
+                              accentColor: proj.accentColor || '#7c3aed',
+                              services: Array.isArray(proj.services) ? proj.services.join(', ') : proj.services || '',
                               tags: Array.isArray(proj.tags) ? proj.tags.join(', ') : proj.tags || '',
+                              challenge: proj.challenge || '',
+                              solution: proj.solution || '',
+                              metric1Value: m[0]?.value || '99/100',
+                              metric1Label: m[0]?.label || 'Lighthouse Performance',
+                              metric2Value: m[1]?.value || '+140%',
+                              metric2Label: m[1]?.label || 'Conversion Rate',
+                              metric3Value: m[2]?.value || '< 0.8s',
+                              metric3Label: m[2]?.label || 'Page Load Speed',
+                              image: proj.image || '',
+                              order: proj.order || 0,
                               featured: proj.featured ?? true,
                             });
                             setProjectModalOpen(true);
                           }}
                           className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+                          title="Edit Project"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -1200,10 +1314,10 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* MODAL: ADD / EDIT PROJECT */}
+      {/* MODAL: ADD / EDIT PROJECT (FULL DETAILS) */}
       {projectModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
             <button
               onClick={() => setProjectModalOpen(false)}
               className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white rounded-full hover:bg-slate-800"
@@ -1211,77 +1325,342 @@ export default function AdminDashboardPage() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-extrabold text-white mb-6">
-              {editingProject ? 'Edit Project' : 'Add New Portfolio Project'}
-            </h3>
+            <div className="mb-6">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-purple-400 block mb-1">
+                Portfolio CMS
+              </span>
+              <h3 className="text-2xl font-extrabold text-white">
+                {editingProject ? 'Edit Portfolio Project' : 'Add New Portfolio Project'}
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Fill in complete project information, live links, and case study details.
+              </p>
+            </div>
 
-            <form onSubmit={handleSaveProject} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Project Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Lumina SaaS Platform"
-                  value={projectForm.title}
-                  onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
-                />
+            <form onSubmit={handleSaveProject} className="space-y-6 text-xs">
+              {/* SECTION 1: BASIC INFORMATION */}
+              <div className="p-4 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-2">
+                  <FolderKanban className="w-4 h-4" />
+                  <span>Basic Information</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Project Title *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Furniqa — Luxury Furniture Store"
+                      value={projectForm.title}
+                      onChange={(e) => {
+                        const newTitle = e.target.value;
+                        const autoSlug = newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                        setProjectForm((prev) => ({
+                          ...prev,
+                          title: newTitle,
+                          slug: editingProject ? prev.slug : autoSlug,
+                        }));
+                      }}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Category *</label>
+                    <select
+                      value={projectForm.category}
+                      onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    >
+                      <option value="Website Development">Website Development</option>
+                      <option value="App Development">App Development</option>
+                      <option value="Video Editing">Video Editing</option>
+                      <option value="E-Commerce">E-Commerce</option>
+                      <option value="SaaS Platform">SaaS Platform</option>
+                      <option value="Real Estate">Real Estate</option>
+                      <option value="Education">Education & LMS</option>
+                      <option value="Fintech">Fintech</option>
+                      <option value="Brand Design">Brand Design & UI/UX</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Slug / URL ID</label>
+                    <input
+                      type="text"
+                      placeholder="furniqa-store"
+                      value={projectForm.slug}
+                      onChange={(e) => setProjectForm({ ...projectForm, slug: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 font-mono text-[11px]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Client Name</label>
+                    <input
+                      type="text"
+                      placeholder="Furniqa Inc."
+                      value={projectForm.client}
+                      onChange={(e) => setProjectForm({ ...projectForm, client: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Timeline</label>
+                    <input
+                      type="text"
+                      placeholder="3-4 Weeks"
+                      value={projectForm.timeline}
+                      onChange={(e) => setProjectForm({ ...projectForm, timeline: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Category *</label>
-                <select
-                  value={projectForm.category}
-                  onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
-                >
-                  <option value="Website Development">Website Development</option>
-                  <option value="App Development">App Development</option>
-                  <option value="Video Editing">Video Editing</option>
-                </select>
+              {/* SECTION 2: LIVE LINKS & REPOSITORY */}
+              <div className="p-4 bg-purple-950/20 rounded-2xl border border-purple-500/30 space-y-3">
+                <div className="flex items-center gap-2 text-purple-300 font-bold text-xs uppercase tracking-wider mb-2">
+                  <Globe className="w-4 h-4 text-purple-400" />
+                  <span>Live URLs & Links</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-purple-200 font-semibold mb-1 flex items-center justify-between">
+                      <span>Visit Live Site URL</span>
+                      {projectForm.liveUrl && (
+                        <a
+                          href={projectForm.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] text-purple-400 hover:text-purple-300 underline inline-flex items-center gap-1"
+                        >
+                          <span>Test Link</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      )}
+                    </label>
+                    <div className="relative">
+                      <Globe className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                      <input
+                        type="url"
+                        placeholder="https://furniqa-store.vercel.app"
+                        value={projectForm.liveUrl}
+                        onChange={(e) => setProjectForm({ ...projectForm, liveUrl: e.target.value })}
+                        className="w-full pl-9 pr-3.5 py-2 bg-slate-950 border border-purple-500/40 rounded-xl text-white focus:outline-none focus:border-purple-400 text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">GitHub / Code URL (Optional)</label>
+                    <div className="relative">
+                      <Code2 className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                      <input
+                        type="url"
+                        placeholder="https://github.com/org/project"
+                        value={projectForm.githubUrl}
+                        onChange={(e) => setProjectForm({ ...projectForm, githubUrl: e.target.value })}
+                        className="w-full pl-9 pr-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Short Description *</label>
-                <textarea
-                  required
-                  rows={2}
-                  placeholder="High-performance platform engineered with Next.js..."
-                  value={projectForm.description}
-                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none"
-                />
-              </div>
+              {/* SECTION 3: DESCRIPTIONS & CASE STUDY */}
+              <div className="p-4 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-2">
+                  <FileText className="w-4 h-4" />
+                  <span>Descriptions & Case Study</span>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Client Name</label>
-                  <input
-                    type="text"
-                    placeholder="Lumina Inc."
-                    value={projectForm.client}
-                    onChange={(e) => setProjectForm({ ...projectForm, client: e.target.value })}
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                  <label className="block text-slate-400 font-semibold mb-1">Short Description * (Cards & Hero)</label>
+                  <textarea
+                    required
+                    rows={2}
+                    placeholder="A modern eCommerce platform with seamless shopping experience and sub-second page loads."
+                    value={projectForm.description}
+                    onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Timeline</label>
-                  <input
-                    type="text"
-                    placeholder="3-4 Weeks"
-                    value={projectForm.timeline}
-                    onChange={(e) => setProjectForm({ ...projectForm, timeline: e.target.value })}
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                  <label className="block text-slate-400 font-semibold mb-1">Detailed Overview (Case Study Page)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Engineered with ultra-fast server rendering, client-side state caching, and responsive micro-interactions."
+                    value={projectForm.longDescription}
+                    onChange={(e) => setProjectForm({ ...projectForm, longDescription: e.target.value })}
+                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">The Client Challenge</label>
+                    <textarea
+                      rows={2}
+                      placeholder="The client required a modern platform capable of delivering sub-second loads..."
+                      value={projectForm.challenge}
+                      onChange={(e) => setProjectForm({ ...projectForm, challenge: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">The Engineering Solution</label>
+                    <textarea
+                      rows={2}
+                      placeholder="Architected a Next.js App Router solution with edge caching..."
+                      value={projectForm.solution}
+                      onChange={(e) => setProjectForm({ ...projectForm, solution: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Image Upload & Preview Section */}
-              <div className="space-y-2">
-                <label className="block text-slate-400 font-semibold mb-1">
-                  Project Cover Image *
-                </label>
+              {/* SECTION 4: TAGS, DELIVERABLES & BRANDING */}
+              <div className="p-4 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-2">
+                  <Tag className="w-4 h-4" />
+                  <span>Tech Stack & Deliverables</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Tech Stack Tags (Comma-separated)</label>
+                    <input
+                      type="text"
+                      placeholder="Next.js, Tailwind, TypeScript, Stripe, Framer Motion"
+                      value={projectForm.tags}
+                      onChange={(e) => setProjectForm({ ...projectForm, tags: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Key Deliverables (Comma-separated)</label>
+                    <input
+                      type="text"
+                      placeholder="UI/UX Design, Web Development, Payment Gateway"
+                      value={projectForm.services}
+                      onChange={(e) => setProjectForm({ ...projectForm, services: e.target.value })}
+                      className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-1">
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Accent Color</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={projectForm.accentColor || '#7c3aed'}
+                        onChange={(e) => setProjectForm({ ...projectForm, accentColor: e.target.value })}
+                        className="w-8 h-8 rounded-lg border border-slate-800 bg-slate-950 cursor-pointer p-0.5"
+                      />
+                      <input
+                        type="text"
+                        value={projectForm.accentColor}
+                        onChange={(e) => setProjectForm({ ...projectForm, accentColor: e.target.value })}
+                        className="w-24 px-2 py-1 bg-slate-950 border border-slate-800 rounded-lg text-white font-mono text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-semibold mb-1">Display Priority Order</label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={projectForm.order}
+                      onChange={(e) => setProjectForm({ ...projectForm, order: Number(e.target.value) })}
+                      className="w-24 px-3 py-1 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 5: KEY PERFORMANCE METRICS */}
+              <div className="p-4 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-2">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Key Performance & Results Metrics</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-2.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase">Metric 1</span>
+                    <input
+                      type="text"
+                      placeholder="99/100"
+                      value={projectForm.metric1Value}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric1Value: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-white font-bold text-xs"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Lighthouse Performance"
+                      value={projectForm.metric1Label}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric1Label: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-slate-400 text-[11px]"
+                    />
+                  </div>
+
+                  <div className="p-2.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase">Metric 2</span>
+                    <input
+                      type="text"
+                      placeholder="+140%"
+                      value={projectForm.metric2Value}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric2Value: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-white font-bold text-xs"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Conversion Rate"
+                      value={projectForm.metric2Label}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric2Label: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-slate-400 text-[11px]"
+                    />
+                  </div>
+
+                  <div className="p-2.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase">Metric 3</span>
+                    <input
+                      type="text"
+                      placeholder="< 0.8s"
+                      value={projectForm.metric3Value}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric3Value: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-white font-bold text-xs"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Page Load Speed"
+                      value={projectForm.metric3Label}
+                      onChange={(e) => setProjectForm({ ...projectForm, metric3Label: e.target.value })}
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded text-slate-400 text-[11px]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 6: PROJECT COVER IMAGE */}
+              <div className="p-4 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider mb-2">
+                  <ImageIcon className="w-4 h-4" />
+                  <span>Project Cover Image *</span>
+                </div>
 
                 {/* Hidden File Input */}
                 <input
@@ -1306,7 +1685,7 @@ export default function AdminDashboardPage() {
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
                           disabled={imageUploading}
-                          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all"
+                          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
                         >
                           <UploadCloud className="w-3.5 h-3.5" />
                           <span>Change Photo</span>
@@ -1314,7 +1693,7 @@ export default function AdminDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setProjectForm((prev) => ({ ...prev, image: '' }))}
-                          className="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all"
+                          className="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           <span>Remove</span>
@@ -1328,7 +1707,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="text-purple-400 hover:text-purple-300 underline font-medium"
+                        className="text-purple-400 hover:text-purple-300 underline font-medium cursor-pointer"
                       >
                         Upload different photo
                       </button>
@@ -1371,7 +1750,7 @@ export default function AdminDashboardPage() {
                 {/* Direct URL input fallback */}
                 <div className="pt-1">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[11px] text-slate-500 font-medium">Or paste image URL:</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Or paste image URL / static path:</span>
                   </div>
                   <input
                     type="text"
@@ -1383,42 +1762,37 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Tags (Comma-separated)</label>
-                <input
-                  type="text"
-                  placeholder="Next.js, Tailwind, TypeScript"
-                  value={projectForm.tags}
-                  onChange={(e) => setProjectForm({ ...projectForm, tags: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
-                />
-              </div>
+              {/* SECTION 7: VISIBILITY & SUBMISSION */}
+              <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="feat"
+                    checked={projectForm.featured}
+                    onChange={(e) => setProjectForm({ ...projectForm, featured: e.target.checked })}
+                    className="w-4 h-4 rounded border-slate-800 bg-slate-950 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  />
+                  <label htmlFor="feat" className="text-slate-300 font-semibold cursor-pointer">
+                    Feature on Homepage Showcase
+                  </label>
+                </div>
 
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="feat"
-                  checked={projectForm.featured}
-                  onChange={(e) => setProjectForm({ ...projectForm, featured: e.target.checked })}
-                  className="rounded border-slate-800 bg-slate-950 text-purple-600 focus:ring-purple-500"
-                />
-                <label htmlFor="feat" className="text-slate-300 font-medium">Feature on Homepage</label>
-              </div>
-
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setProjectModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold"
-                >
-                  Save Project
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setProjectModalOpen(false)}
+                    className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 flex items-center gap-1.5 cursor-pointer transition-all"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Save Project</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>

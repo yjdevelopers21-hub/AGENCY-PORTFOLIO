@@ -11,9 +11,15 @@ export interface ServiceItem {
   href: string;
 }
 
+export interface ProjectMetric {
+  label: string;
+  value: string;
+}
+
 export interface ProjectItem {
   id: string;
   _id?: string;
+  slug?: string;
   title: string;
   category: string;
   description: string;
@@ -22,10 +28,16 @@ export interface ProjectItem {
   accentColor?: string;
   href?: string;
   liveUrl?: string;
+  githubUrl?: string;
   client?: string;
   timeline?: string;
+  services?: string[];
   tags?: string[];
+  challenge?: string;
+  solution?: string;
+  metrics?: ProjectMetric[];
   featured?: boolean;
+  order?: number;
 }
 
 export interface ProcessStep {
