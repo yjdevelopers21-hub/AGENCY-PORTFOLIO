@@ -52,73 +52,22 @@ export function SelectedWork() {
 
                 <Card className="h-full flex flex-col justify-between overflow-hidden p-0 group border border-slate-200/80 bg-white cursor-pointer bhoot-card-hover">
                   {/* Project Banner Mockup */}
-                  <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden">
-                    {project.image && project.image !== '/landing-page.png' && !['furniqa', 'solidestate', 'skilly'].includes(project.id) ? (
+                  <div className="relative w-full aspect-[16/10] bg-slate-900 overflow-hidden">
+                    {project.image ? (
                       <div className="relative w-full h-full">
-                        <Image
+                        <img
                           src={project.image}
                           alt={project.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
-                    ) : null}
-                    {project.id === 'furniqa' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-amber-100 via-orange-50 to-stone-200 flex items-center justify-center p-6 group-hover:scale-105 transition-transform duration-500">
-                        <div className="w-full h-full bg-white/80 rounded-xl shadow-lg border border-amber-200/60 p-4 flex flex-col justify-between">
-                          <div className="flex justify-between items-center">
-                            <span className="font-extrabold text-amber-900 text-sm tracking-wider">
-                              Furniqa.
-                            </span>
-                            <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium">
-                              Store
-                            </span>
-                          </div>
-                          <div className="flex gap-2 my-auto">
-                            <div className="w-1/2 aspect-square rounded-lg bg-amber-200/60" />
-                            <div className="w-1/2 aspect-square rounded-lg bg-stone-300/60" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {project.id === 'solidestate' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 flex items-center justify-center p-6 group-hover:scale-105 transition-transform duration-500">
-                        <div className="w-full h-full bg-slate-900/90 rounded-xl border border-slate-700/80 p-4 flex flex-col justify-between text-white">
-                          <span className="text-xs text-blue-400 font-semibold uppercase tracking-widest">
-                            Real Estate
-                          </span>
-                          <h4 className="text-lg font-bold text-white tracking-tight">
-                            Find your perfect space.
-                          </h4>
-                          <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                            <div className="w-3/4 h-full bg-blue-500" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {project.id === 'skilly' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-purple-50 to-indigo-100 flex items-center justify-center p-6 group-hover:scale-105 transition-transform duration-500">
-                        <div className="w-full h-full bg-white/90 rounded-xl shadow-lg border border-purple-200/80 p-4 flex flex-col justify-between">
-                          <span className="text-xs text-purple-600 font-bold uppercase tracking-wider">
-                            Education
-                          </span>
-                          <h4 className="text-base font-extrabold text-slate-900">
-                            Learn skills that move you forward
-                          </h4>
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center">
-                              S
-                            </div>
-                            <span className="text-xs text-slate-600 font-medium">
-                              Interactive LMS
-                            </span>
-                          </div>
-                        </div>
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-purple-900/40 via-slate-900 to-indigo-950 flex items-center justify-center p-6 text-center">
+                        <span className="text-white font-bold text-base tracking-wide">{project.title}</span>
                       </div>
                     )}
                   </div>
+
 
                   {/* Card Content Details */}
                   <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between">

@@ -13,13 +13,19 @@ export interface ServiceItem {
 
 export interface ProjectItem {
   id: string;
+  _id?: string;
   title: string;
   category: string;
   description: string;
+  longDescription?: string;
   image: string;
   accentColor?: string;
-  href: string;
+  href?: string;
+  liveUrl?: string;
+  client?: string;
+  timeline?: string;
   tags?: string[];
+  featured?: boolean;
 }
 
 export interface ProcessStep {

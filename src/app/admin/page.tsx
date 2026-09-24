@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,6 +26,9 @@ import {
   Sparkles,
   Eye,
   X,
+  UploadCloud,
+  ImageIcon,
+  Loader2,
 } from 'lucide-react';
 
 interface AdminUser {
@@ -128,6 +131,83 @@ export default function AdminDashboardPage() {
     tags: 'Next.js, Tailwind, TypeScript',
     featured: true,
   });
+  const [imageUploading, setImageUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const processImageFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (PNG, JPG, WEBP, SVG, etc.)');
+      return;
+    }
+    setImageUploading(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/webp', 0.85);
+          setProjectForm((prev) => ({ ...prev, image: compressedDataUrl }));
+        } else {
+          setProjectForm((prev) => ({ ...prev, image: event.target?.result as string }));
+        }
+        setImageUploading(false);
+      };
+      img.onerror = () => {
+        setProjectForm((prev) => ({ ...prev, image: event.target?.result as string }));
+        setImageUploading(false);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processImageFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
 
   // Services
   const [services, setServices] = useState<ServiceData[]>([]);
@@ -830,12 +910,17 @@ export default function AdminDashboardPage() {
                   >
                     <div>
                       <div className="relative aspect-video w-full bg-slate-950 overflow-hidden">
-                        <Image
-                          src={proj.image || '/landing-page.png'}
-                          alt={proj.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
+                        {proj.image ? (
+                          <img
+                            src={proj.image}
+                            alt={proj.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-slate-900 text-slate-600">
+                            <ImageIcon className="w-8 h-8" />
+                          </div>
+                        )}
                         <span className="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold rounded uppercase tracking-wider">
                           {proj.category}
                         </span>
@@ -1192,15 +1277,110 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Image URL / Path</label>
+              {/* Image Upload & Preview Section */}
+              <div className="space-y-2">
+                <label className="block text-slate-400 font-semibold mb-1">
+                  Project Cover Image *
+                </label>
+
+                {/* Hidden File Input */}
                 <input
-                  type="text"
-                  placeholder="/landing-page.png"
-                  value={projectForm.image}
-                  onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-purple-500"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml, image/gif"
+                  onChange={handleImageFileChange}
+                  className="hidden"
                 />
+
+                {/* Image Preview Box if image exists */}
+                {projectForm.image ? (
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 group">
+                    <div className="relative aspect-video w-full">
+                      <img
+                        src={projectForm.image}
+                        alt="Project preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={imageUploading}
+                          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all"
+                        >
+                          <UploadCloud className="w-3.5 h-3.5" />
+                          <span>Change Photo</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setProjectForm((prev) => ({ ...prev, image: '' }))}
+                          className="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-lg transition-all"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-2.5 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                        <CheckCircle className="w-3.5 h-3.5" /> Image Attached
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-purple-400 hover:text-purple-300 underline font-medium"
+                      >
+                        Upload different photo
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  /* Dropzone / Upload Area */
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                      isDragging
+                        ? 'border-purple-500 bg-purple-500/10'
+                        : 'border-slate-800 hover:border-purple-500/50 bg-slate-950/50 hover:bg-slate-950'
+                    }`}
+                  >
+                    {imageUploading ? (
+                      <div className="flex flex-col items-center justify-center py-3 text-purple-400">
+                        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                        <span className="text-xs font-semibold">Optimizing and preparing image...</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-2">
+                        <div className="w-12 h-12 rounded-2xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-3 shadow-inner">
+                          <UploadCloud className="w-6 h-6" />
+                        </div>
+                        <span className="text-xs font-bold text-white mb-1">
+                          Click to upload or drag & drop photo
+                        </span>
+                        <span className="text-[11px] text-slate-500">
+                          PNG, JPG, WEBP, SVG (Auto-compressed to high-res WebP)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Direct URL input fallback */}
+                <div className="pt-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] text-slate-500 font-medium">Or paste image URL:</span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="https://images.unsplash.com/... or /landing-page.png"
+                    value={projectForm.image}
+                    onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })}
+                    className="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 text-xs focus:outline-none focus:border-purple-500 font-mono"
+                  />
+                </div>
               </div>
 
               <div>

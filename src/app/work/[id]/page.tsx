@@ -20,11 +20,38 @@ interface CaseStudyParams {
 export default function CaseStudyPage({ params }: CaseStudyParams) {
   const { id } = use(params);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const fallbackProject = projectsData.find((p) => p.id === id);
+  const [project, setProject] = useState(fallbackProject || null);
+  const [loading, setLoading] = useState(!fallbackProject);
 
-  const project = projectsData.find((p) => p.id === id);
+  React.useEffect(() => {
+    fetch('/api/projects', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          const match = data.data.find(
+            (p: { id?: string; _id?: string; slug?: string }) =>
+              p.id === id || p._id === id || p.slug === id
+          );
+          if (match) {
+            setProject(match);
+          }
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (!project && !loading) {
+    notFound();
+  }
 
   if (!project) {
-    notFound();
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-8 h-8 rounded-full border-4 border-purple-600 border-t-transparent animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -62,8 +89,8 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                 Inquire For Similar Project
               </Button>
               <a
-                href="#"
-                target="_blank"
+                href={project.liveUrl || '#'}
+                target={project.liveUrl ? '_blank' : '_self'}
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all"
               >
@@ -75,7 +102,18 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
 
           {/* Project Preview Showcase Banner */}
           <div className="w-full aspect-[16/9] rounded-3xl bg-slate-900 border border-slate-800 p-8 sm:p-12 mb-16 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bhoot-grid-pattern opacity-20" />
+            {project.image ? (
+              <div className="absolute inset-0 z-0">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover opacity-35"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+              </div>
+            ) : (
+              <div className="absolute inset-0 bhoot-grid-pattern opacity-20" />
+            )}
             <div className="relative z-10 flex justify-between items-center">
               <span className="text-xs font-bold uppercase tracking-widest text-purple-400">
                 Case Study Overview — {project.title}
@@ -90,7 +128,7 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
                 High-Performance Architecture
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed">
-                Engineered with ultra-fast server rendering, client-side state caching, and responsive micro-interactions.
+                {project.longDescription || 'Engineered with ultra-fast server rendering, client-side state caching, and responsive micro-interactions.'}
               </p>
             </div>
 
@@ -107,6 +145,7 @@ export default function CaseStudyPage({ params }: CaseStudyParams) {
           </div>
 
           {/* Details Breakdown Grid */}
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             <div className="lg:col-span-8 space-y-10">
               <div>
